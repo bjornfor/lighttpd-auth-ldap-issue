@@ -8,6 +8,8 @@ fails with this message:
 
   (mod_authn_ldap.c.449) ldap: ldap_sasl_bind_s(): Can't contact LDAP server
 
+Upstream issue: https://redmine.lighttpd.net/issues/2940
+
 This tree contains scripts to build and debug a local setup of lighttpd and
 openldap.
 
