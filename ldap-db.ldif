@@ -1,0 +1,28 @@
+dn: dc=example,dc=com
+dc: example
+o: dc=example,dc=com
+objectclass: top
+objectclass: dcObject
+objectclass: organization
+
+dn: cn=u1,dc=example,dc=com
+sn: u1
+objectClass: person
+objectClass: posixAccount
+uid: u1
+uidNumber: 1000
+gidNumber: 1000
+homeDirectory: /home/u1
+loginShell: /bin/sh
+userPassword: u1
+
+dn: cn=webuser1,dc=example,dc=com
+sn: webuser1
+objectClass: person
+objectClass: posixAccount
+uid: webuser1
+uidNumber: 1001
+gidNumber: 1002
+homeDirectory: /home/webuser1
+loginShell: /bin/sh
+userPassword: webuser1

@@ -1,0 +1,12 @@
+session_name: lighttpd-auth-ldap-issue
+windows:
+- window_name: dev
+  layout: tiled
+  shell_command_before:
+    - cd ~/lighttpd-auth-ldap-issue/  # run as a first command in all panes
+  panes:
+    # commands for pane 1, 2, ...
+    - vim -S
+    - make openldap-run
+    - echo Run \"make clone-repo-*\" here
+    - make lighttpd-run

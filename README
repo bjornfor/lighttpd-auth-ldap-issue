@@ -1,0 +1,68 @@
+= README
+
+This tree is for trying to find and fix the issue where
+
+  lighttpd + ldap auth + git cloning via cgi script
+
+fails with this message:
+
+  (mod_authn_ldap.c.449) ldap: ldap_sasl_bind_s(): Can't contact LDAP server
+
+This tree contains scripts to build and debug a local setup of lighttpd and
+openldap.
+
+
+== Initial setup
+
+Clone and build openldap and lighttpd (fetches master branch):
+
+  make init
+
+The makefile depends on Nix (https://nixos.org/nix/) to setup build
+environments.
+
+
+== Debug cycles
+
+In separate terminals, run:
+
+  make openldap-run        # will start slapd with sudo to open port 389
+  make lighttpd-run        # runs on port 1234 (unprivileged)
+  make clone-repo-*        # run the various scenarios, the bug is in clone-repo-cgi-auth
+
+After making changes to either lighttpd or openldap, run "make
+{lighttpd,openldap}-build", then do "make *-run".
+
+TIP: Run "tmuxp load ." to setup a suitable tmux session with pre-configured
+panes. The config is in .tmuxp.yaml.
+
+
+== Misc
+
+To run openldap or lighttpd under gdb, uncomment LIGHTTPD_MAYBE_GDB,
+OPENLDAP_MAYBE_GDB in the Makefile.
+
+Setting debug level for libldap inside lighttpd gdb session:
+
+    p ldap_int_global_options->ldo_debug
+    set ldap_int_global_options->ldo_debug = 1
+
+Other useful GDB commands:
+
+  set detach-on-fork off
+
+splot is broken in latest nixpkgs releases. Get it from nixpkgs-17.09:
+
+  nix-env -iA haskellPackages.splot -f channel:nixos-17.09
+
+Adding a delay (100ms) in lighttpd, before
+
+  ret = ldap_sasl_bind_s(ld,dn,LDAP_SASL_SIMPLE,&creds,NULL,NULL,NULL);
+
+"fixes" things. This can be done with gdb at runtime:
+
+  break ldap_sasl_bind_s
+  commands $number_from_break_command
+  >call (int)usleep(1000*100)
+  >cont
+  >end

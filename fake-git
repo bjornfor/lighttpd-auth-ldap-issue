@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Fake git to replicate git clone network traffic over lighttpd/auth_ldap/cgi,
+# for replicating bug.
+#
+# UPDATE: It was enough to just run a bunch of curl's on $repo/info/refs in
+# parallel to trigger the bug.
+
+if [ "x$1" != xclone ]; then
+    echo "fake-git: only supports the clone argument. Usage: ./fake-git clone \$URL"
+    exit 1
+fi
+
+repo=$2
+if [ "x$repo" = x ]; then
+    echo "fake-git: missing repo URL. Usage: ./fake-git clone \$URL"
+    exit 1
+fi
+
+# This is enough to trigger the bug
+for i in $(seq 500); do
+    curl --silent "$repo"/info/refs |& grep -v "refs/heads/master" &
+done
+
+wait
+echo done
