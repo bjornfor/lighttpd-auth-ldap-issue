@@ -1,5 +1,9 @@
 = README
 
+IMPORTANT: This bug was found in lighttpd commit 9232145024ae. It was fixed in
+commit ae9cafecea3c ("[mod_authn_ldap] ldap_set_option LDAP_OPT_RESTART (fixes #2940)"),
+which is included in lighttpd v1.4.54 (released 2019-05-27). Issue resolved!
+
 This tree is for trying to find and fix the issue where
 
   lighttpd + ldap auth + git cloning via cgi script
